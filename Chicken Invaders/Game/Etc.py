@@ -9,7 +9,7 @@ SPACESHIP_WIDTH = int(SCREEN_WIDTH * 0.06)
 SPACESHIP_HEIGHT = int(SCREEN_WIDTH * 0.05)
 FRAMES_BETWEEN_SHOTS = FPS / 3
 FLICKERING_FRAMES = int(FPS * 2.5)
-PICS_PATH = r"C:\Users\Dan\Documents\Python Scripts\Pygame\Chicken Invaders\Game\Pictures"
+PICS_PATH = r"Chicken Invaders\Game\Pictures"
 #       Weapons
 JOKER = 0
 RED_WEAPON = 1
