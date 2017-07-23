@@ -31,7 +31,7 @@ def gameLoop(targets, moveTargets, args):
                 exit()
             elif event.type == KEYDOWN:
                 if event.key == K_f:
-                    bullets += spacelship.shoot()
+                    bullets += spaceship.shoot()
             elif event.type == MOUSEBUTTONUP:
                 spaceship.flickeringFrames = FLICKERING_FRAMES
 
