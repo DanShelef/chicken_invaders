@@ -3,7 +3,7 @@ import math
 from Game.GeneralPygame import SCREEN_WIDTH, SCREEN_HEIGHT
 
 ### Constants:
-WINDOW_CAPTION = "Space Chickens"
+WINDOW_CAPTION = "Chicken Invaders"
 FPS = 24
 SPACESHIP_WIDTH = int(SCREEN_WIDTH * 0.06)
 SPACESHIP_HEIGHT = int(SCREEN_WIDTH * 0.05)
@@ -66,15 +66,13 @@ def bulletsDamage(bullets, targets):
     i = 0
     j = 0
     while i < len(bullets):
-        if not (0 - bullets[i].width < bullets[i].x < SCREEN_WIDTH + bullets[i].width)\
-           or not (0 - bullets[i].height < bullets[i].y < SCREEN_HEIGHT + bullets[i].height):
+        if bullet.isAllOut():
             bullets.remove(bullets[i])
             i -= 1
         else:
             j = 0
             while (j < len(targets)) and len(bullets):
-                if not (0 - targets[j].width / 2 < targets[j].x < SCREEN_WIDTH + targets[j].width / 2)\
-                   or not (0 - targets[j].height / 2 < targets[j].y < SCREEN_WIDTH + targets[j].height / 2):
+                if target.isAllOut():
                     pass
                 elif targets[j].isColiding(bullets[i]):
                     targets[j].hp -= bullets[i].DAMAGE

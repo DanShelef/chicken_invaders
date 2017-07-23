@@ -20,7 +20,6 @@ class movingObj(object):
         self.x = x
         self.y = y
         self.moveFunction = moveFunction
-        self.framCounter = 0
 
     def draw(self, window):
         """
@@ -35,13 +34,22 @@ class movingObj(object):
     def move(self, *args):
         """
         """
-        self.moveFunction(self, *args)
+        return self.moveFunction(self, *args)
 
     def isColiding(self, obj):
         """
         """
         return (abs(self.y - obj.y) < (self.height + obj.height) / 2) \
                and (abs(self.x - obj.x) < (self.width + obj.width) / 2)
+
+    def isAllOut(self):
+        """
+        """
+        return (self.x < 0 - self.width / 2)\
+               or (self.x < SCREEN_WIDTH + self.width / 2)\
+               or (self.y < 0 - self.height / 2)\
+               or (self.y < SCREEN_HEIGHT + self.height / 2)\
+
 
 class Upgrade(movingObj):
     """
@@ -51,9 +59,19 @@ class Upgrade(movingObj):
 class Danger(movingObj):
     """
     """
-    pass
+    def __init__(self, imagePath, width, height, angle, x, y, moveFunction):
+        """
+        """
+        super(Danger, self).__init__(imagePath, width, height, angle, x, y, moveFunction)
+        self.framesCounter = 0
 
-class Target(movingObj):
+    def isAllIn(self):
+        """
+        """
+        return (0 + self.height / 2 <= self.y <= SCREEN_HEIGHT - self.height / 2)\
+               and (0 + self.width / 2 <= self.x <= SCREEN_WIDTH - self.width / 2)
+
+class Target(Danger):
     """
     """
     def __init__(self, level, targetId):

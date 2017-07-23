@@ -1,7 +1,7 @@
 import Etc
 import GeneralPygame
 import Loops
-import Levels
 import Classes
+import Levels
 
-__all__ = ["Etc", "GeneralPygame", "Loops", "Levels", "Classes"]
+__all__ = ["Etc", "GeneralPygame", "Loops", "Classes", "Levels"]

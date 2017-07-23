@@ -8,18 +8,12 @@ def runGame():
     loopId = 0
     level = 1
 
-    background = Loops.Background()
-    spaceship = Loops.Spaceship()
-    bullets = list()
-    dangers = list()
-    targets = [Classes.OtherClasses.Target(level, i)
-               for i in xrange(Levels.TARGETS_COUNT[level])]
-    bonuses = list()
+    moveTargets = Levels.MOVE_TARGETS[level]
 
-    ID_TO_ARGS = {0: (bullets,
-                      dangers,
-                      targets,
-                      bonuses)}
+    ID_TO_ARGS = {0: ([Classes.OtherClasses.Target(level, i)
+                       for i in xrange(Levels.TARGETS_COUNT[level])],
+                      moveTargets,
+                      Levels.MOVE_TARGETS_ARGS[level])}
 
     while True:
         if loopId not in ID_TO_LOOP:
