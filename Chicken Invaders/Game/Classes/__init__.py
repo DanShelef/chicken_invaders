@@ -4,4 +4,4 @@ import WeaponRelated
 import DangerousClasses
 import BonusesClasses
 
-__all__ = ["LoopsClasses", "OtherClasses", "WeaponRelated", "DangerousClasses", "BonusesClasses"]
+__all__ = ["LoopsClasses", "OtherClasses", "WeaponRelated", "BonusesClasses", "DangerousClasses"]

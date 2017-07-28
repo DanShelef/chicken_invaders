@@ -72,18 +72,3 @@ class Ray(object):
             self.target = target
             return
 
-
-class Upgrade(movingObj):
-    """
-    """
-    def __init__(self, kind, target):
-        """
-        """
-        imagePath = KIND_TO_UPGRADE_PIC[kind]
-        width = UPGRADE_SIZE
-        height = UPGRADE_SIZE
-        angle = 0
-        x = target.x
-        y = target.y
-        super(Upgrade, self).__init__(self, imagePath, width, height, angle, x, y, [upgradeMovment])
-        self.kind = kind

@@ -1,5 +1,5 @@
 ### Imports:
-import math
+import math, random, time
 from Game.GeneralPygame import SCREEN_WIDTH, SCREEN_HEIGHT
 
 ### Constants:
@@ -10,23 +10,24 @@ SPACESHIP_HEIGHT = int(SCREEN_WIDTH * 0.04)
 UPGRADE_SIZE = int(SPACESHIP_WIDTH * 0.2)
 FRAMES_BETWEEN_SHOTS = FPS / 3
 FLICKERING_FRAMES = int(FPS * 2.5)
-AMOUNT_OF_RAYS = 3
-AMOUNT_OF_LEVELS = 8
-
 PICS_PATH = r"Chicken Invaders\Game\Pictures"
+BIG_CHICKEN = 100
+SCORE_OPTIONS = (10, 20, 30, 40, 50, BIG_CHICKEN)
+BIG_CHICKEN_SIZE = SPACESHIP_WIDTH * 3 / 4
+SMALL_CHICKEN_SIZE = SPACESHIP_WIDTH * 2 / 3
+GRAVITY = 5
+MEAT_BONUS = 0
+UPGRADE_BONUS = 1
+
 #       Weapons
+WEAPONS_AMOUNT = 3
+WEAPONS_LEVELS_AMOUNT = 8
 JOKER = 0
 RED_WEAPON = 1
 GREEN_WEAPON = 2
 YELLOW_WEAPON = 3
-RED_LEVEL_TO_DAMAGE    = {0:(10,),
-                          1:(10,) * 2,
-                          2:(10,) * 3,
-                          3:(10,) * 4,
-                          4:(10,) * 5,
-                          5:(10,) * 6,
-                          6:(10,) * 7,
-                          7:(10,) * 8,}
+RED_LEVEL_TO_DAMAGE    = {i:(10,) * (i + 1)
+                          for i in xrange(WEAPONS_LEVELS_AMOUNT)}
 GREEN_LEVEL_TO_DAMAGE  = {0:(10,),
                           1:(20,),
                           2:(15, 15),
@@ -35,14 +36,8 @@ GREEN_LEVEL_TO_DAMAGE  = {0:(10,),
                           5:(15, 30, 15),
                           6:(15, 20, 20, 15),
                           7:(20, 20, 20, 20)}
-YELLOW_LEVEL_TO_DAMAGE = {0:(10,),
-                          1:(20,),
-                          2:(30,),
-                          3:(40,),
-                          4:(50,),
-                          5:(60,),
-                          6:(70,),
-                          7:(80,)}
+YELLOW_LEVEL_TO_DAMAGE = {i:(10 * (i + 1),)
+                          for i in xrange(WEAPONS_LEVELS_AMOUNT)}
 KIND_TO_DAMAGE = {RED_WEAPON   : RED_LEVEL_TO_DAMAGE,
                   GREEN_WEAPON : GREEN_LEVEL_TO_DAMAGE,
                   YELLOW_WEAPON: YELLOW_LEVEL_TO_DAMAGE}
@@ -75,76 +70,52 @@ def upgradeMovment(upgrade):
     upgrade.angle += 10
     upgrade.y += 5
 
-def bulletsDamage(bullets, targets):
+def meatMovment(meat):
     """
     """
-    i = 0
-    j = 0
-    while i < len(bullets):
-        if bullets[i].isAllOut():
-            bullets.remove(bullets[i])
-            i -= 1
-        else:
-            j = 0
-            while (j < len(targets)) and len(bullets):
-                if targets[j].isAllOut():
-                    pass
-                elif targets[j].isColiding(bullets[i]) and targets[j].hp > 0:
-                    targets[j].hp -= bullets[i].DAMAGE
-                    bullets.remove(bullets[i])
-                    i -= 1
-                    j = len(targets)
-                j += 1
-        i += 1
+    meat.x += meat.vx
+    meat.y += meat.vy
+    meat.vy += GRAVITY
+    if meat.x < meat.width / 2:
+        meat.x  = meat.width / 2
+        meat.vx = -meat.vx
+    elif meat.x > SCREEN_WIDTH - meat.width / 2:
+        meat.x = SCREEN_WIDTH - meat.width / 2
+        meat.vx = -meat.vx
+    if meat.y > SCREEN_HEIGHT - meat.width / 2:
+        meat.y = SCREEN_HEIGHT - meat.width / 2
+        meat.vy = -meat.vy / 2
+        meat.bouncesCounter += 1
+        if meat.bouncesCounter > 3:
+            meat.vy = 0
+            meat.vx = 0
+            meat.waitFrames -= 1
 
-def raysDamage(spaceship):
+def randomUpgrade():
     """
     """
-    for ray in spaceship.rays:
-        if ray.target is not None:
-            if (ray.target is not None) and (spaceship.framesFromShot is 1):
-                ray.target.hp -= ray.damage
-            if ray.target.hp <= 0:
-                ray.target = None
-                ray.heights.remove(ray.heights[0])
+    jokerChance = 0.1
+    random.seed(time.time())
+    kind = random.random()
+    for weaponKind in xrange(1, WEAPONS_AMOUNT + 1):
+        if kind < (1 - jokerChance) / WEAPONS_AMOUNT * weaponKind:
+            return weaponKind
+    return JOKER
 
-def targetsCheck(spaceship, targets, bonuses):
+def randomScore():
     """
     """
-    i = 0
-    score = 0
+    random.seed(time.time())
+    return random.choice(SCORE_OPTIONS)
 
-    while i < len(targets):
-        if targets[i].isColiding(spaceship) and (spaceship.flickeringFrames is 0):
-            spaceship.lives -= 1
-            spaceship.flickeringFrames = FLICKERING_FRAMES
-        if targets[i].hp <= 0:
-            bonuses += targets[i].getBonuses()
-            score += targets[i].score
-            targets.remove(targets[i])
-            i -= 1
-        i += 1
-    return score
-
-def bonusesCheck(spaceship, bonuses):
+def randomVelocity():
     """
     """
-    i = 0
-    score = 0
-
-    while i < len(bonuses):
-        if bonuses[i].isAllOut():
-            bonuses.remove(bonuses[i])
-            i -= 1
-        elif bonuses[i].isColiding(spaceship):
-            if isinstance(bonuses[i], Upgrade):
-                spaceship.upgrade(bonuses[i].kind)
-            elif isinstance(bonuses[i], Meat):
-                score += bonuses[i].score
-            else:
-                raise Exception("Unknown bonus type!")
-            bonuses.remove(bonuses[i])
-            i -= 1
-        i += 1
-
-    return score
+    angleRange = (60, 120)
+    velocityRange = (30, 50)
+    random.seed(time.time())
+    angle = random.randint(*angleRange)
+    velocity = random.randint(*velocityRange)
+    vx = velocity * math.cos(math.radians(angle))
+    vy = velocity * math.sin(math.radians(angle))
+    return vx, -vy

@@ -195,3 +195,11 @@ class Spaceship(object):
             rays = KIND_TO_DAMAGE[self.weaponKind][self.weaponLevel]
             for damage in rays:
                 self.rays.append(Ray(self, damage))
+
+    def upgrade(self, upgrade):
+        if (upgrade is JOKER) or (upgrade is self.weaponKind):
+            self.weaponLevel += 1
+            self.weaponLevel -= self.weaponLevel / WEAPONS_LEVELS_AMOUNT
+        else:
+            self.weaponKind = upgrade
+            self.weaponLevel = 0

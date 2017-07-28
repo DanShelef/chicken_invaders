@@ -1,0 +1,2 @@
+class WeirdBonus(Exception):
+	pass

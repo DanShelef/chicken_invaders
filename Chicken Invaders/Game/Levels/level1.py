@@ -1,7 +1,6 @@
 import random, time
 from Game.GeneralPygame import SCREEN_WIDTH
-from Game.Etc import SPACESHIP_WIDTH, PICS_PATH
-from Game.Classes.WeaponRelated import Upgrade
+from Game.Etc import SPACESHIP_WIDTH, PICS_PATH, MEAT_BONUS, UPGRADE_BONUS
 
 def moveTargets(targets, rays, stop, delta):
     """
@@ -36,8 +35,13 @@ def moveFunction(target, rays, stop, delta):
 ARGS = (False, 5)
 LINE = 16
 TARGETS_COUNT = LINE * 3
+UPGRADES = TARGETS_COUNT
 
-#bonuses = [for i in ]
+bonuses = [[MEAT_BONUS] for i in xrange(TARGETS_COUNT)]
+for i in xrange(UPGRADES):
+    bonuses[i] += [UPGRADE_BONUS]
+random.seed(time.time())
+random.shuffle(bonuses)
 
 TARGETS_PICS            = {i:PICS_PATH + r"\Chicken.png"
                            for i in xrange(TARGETS_COUNT)}
@@ -52,9 +56,9 @@ TARGETS_START_POSITION  = {i:((i % LINE + 1) * SPACESHIP_WIDTH,
                            for i in xrange(TARGETS_COUNT)}
 TARGETS_MOVE_FUNCTION   = {i:[moveFunction]
                            for i in xrange(TARGETS_COUNT)}
-TARGETS_HEALTH          = {i:1
+TARGETS_HEALTH          = {i:30
                            for i in xrange(TARGETS_COUNT)}
 TARGETS_VALUE           = {i:10
                            for i in xrange(TARGETS_COUNT)}
-TARGETS_BONUSES         = {i:list()
+TARGETS_BONUSES         = {i:bonuses[i]
                            for i in xrange(TARGETS_COUNT)}

@@ -1,6 +1,8 @@
 import random, time
 from Game.GeneralPygame import *
+from Game.Etc import MEAT_BONUS, UPGRADE_BONUS
 from Game.Classes.OtherClasses import movingObj
+from Game.Classes.BonusesClasses import Meat, Upgrade
 from Game.Levels import TARGETS_PICS, TARGETS_WIDTHS, TARGETS_HEIGHTS, TARGETS_ANGLES, TARGETS_START_POSITION
 from Game.Levels import TARGETS_MOVE_FUNCTION, TARGETS_HEALTH, TARGETS_VALUE, TARGETS_BONUSES
 
@@ -39,5 +41,8 @@ class Target(Danger):
         """
         newBonuses = list()
         for bonus in self.bonuses:
-            newBonuses.append(bonus(target=self))
+            if bonus is MEAT_BONUS:
+                newBonuses.append(Meat(self.x, self.y))
+            elif bonus is UPGRADE_BONUS:
+                newBonuses.append(Upgrade(self.x, self.y))
         return newBonuses
