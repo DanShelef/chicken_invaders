@@ -3,7 +3,7 @@ import level1
 __all__ = ["level1"]
 
 MOVE_TARGETS			= {1: level1.moveTargets}
-MOVE_TARGETS_ARGS		= {1: level1.args}
+MOVE_TARGETS_ARGS		= {1: level1.ARGS}
 TARGETS_COUNT           = {1: level1.TARGETS_COUNT}
 TARGETS_PICS            = {1: level1.TARGETS_PICS}
 TARGETS_WIDTHS          = {1: level1.TARGETS_WIDTHS}

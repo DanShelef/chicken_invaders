@@ -72,7 +72,7 @@ class Spaceship(object):
         self.leftIsPressed = False
         self.downIsPressed = False
         self.upIsPressed = False
-        self.weaponKind = YELLOW_WEAPON
+        self.weaponKind = RED_WEAPON
         self.weaponLevel = 0
         self.autoShootActive = False
         self.framesFromShot = 0
@@ -176,7 +176,7 @@ class Spaceship(object):
 
     def keyboardUpdate(self, left, right, up, down, fire):
         """
-        Doc:        Updating boolians in the object which depends on the keboard
+        Doc:        Updating boolians in the object which depends on the keyboard
         Arguments:  left (bool) - State of the left moving key (pressed/not pressed)
                     right (bool) - State of the right moving key (pressed/not pressed)
                     up (bool) - State of the up moving key (pressed/not pressed)
@@ -191,7 +191,7 @@ class Spaceship(object):
         self.autoShootActive = fire
 
         self.rays = list()
-        if self.autoShootActive:
+        if self.autoShootActive and IS_WEAPON_RAY[self.weaponKind]:
             rays = KIND_TO_DAMAGE[self.weaponKind][self.weaponLevel]
             for damage in rays:
                 self.rays.append(Ray(self, damage))

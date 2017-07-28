@@ -43,6 +43,7 @@ def gameLoop(targets, moveTargets, args):
         raysDamage(spaceship)
         bulletsDamage(bullets, targets)
         score += targetsCheck(spaceship, targets, bonuses)
+        score += bonusesCheck(spaceship, bonuses)
 
         #Drawing order:
         background.draw(window)
@@ -50,7 +51,5 @@ def gameLoop(targets, moveTargets, args):
         spaceship.draw(window)
         draw(window, dangers + targets + bonuses)
         pygame.display.update((0,0,SCREEN_WIDTH,SCREEN_HEIGHT))
-
-        #print "score ",score
 
         fpsClock.tick(FPS)

@@ -5,8 +5,9 @@ from Game.GeneralPygame import SCREEN_WIDTH, SCREEN_HEIGHT
 ### Constants:
 WINDOW_CAPTION = "Chicken Invaders"
 FPS = 24
-SPACESHIP_WIDTH = int(SCREEN_WIDTH * 0.06)
-SPACESHIP_HEIGHT = int(SCREEN_WIDTH * 0.05)
+SPACESHIP_WIDTH = int(SCREEN_WIDTH * 0.05)
+SPACESHIP_HEIGHT = int(SCREEN_WIDTH * 0.04)
+UPGRADE_SIZE = int(SPACESHIP_WIDTH * 0.2)
 FRAMES_BETWEEN_SHOTS = FPS / 3
 FLICKERING_FRAMES = int(FPS * 2.5)
 PICS_PATH = r"Chicken Invaders\Game\Pictures"
@@ -46,12 +47,17 @@ KIND_TO_DAMAGE = {RED_WEAPON   : RED_LEVEL_TO_DAMAGE,
 KIND_TO_VELOCITY = {RED_WEAPON   : -25,
                     GREEN_WEAPON : -20,
                     YELLOW_WEAPON: 0}
-KIND_TO_PIC = {RED_WEAPON   : PICS_PATH + r"\Red.png",
-               GREEN_WEAPON : PICS_PATH + r"\Green.png",
-               YELLOW_WEAPON: PICS_PATH + r"\Yellow.png"}
+KIND_TO_SHOT_PIC = {RED_WEAPON   : PICS_PATH + r"\Red.png",
+                    GREEN_WEAPON : PICS_PATH + r"\Green.png",
+                    YELLOW_WEAPON: PICS_PATH + r"\Yellow.png"}
 IS_WEAPON_RAY = {RED_WEAPON   : False,
                  GREEN_WEAPON : False,
                  YELLOW_WEAPON: True}
+
+KIND_TO_UPGRADE_PIC = {JOKER        : PICS_PATH + r"\JokerUpgrade.png",
+                       RED_WEAPON   : PICS_PATH + r"\RedUpgrade.png",
+                       GREEN_WEAPON : PICS_PATH + r"\GreenUpgrade.png",
+                       YELLOW_WEAPON: PICS_PATH + r"\YellowUpgrade.png"}
 
 ### Functions:
 def bulletMovment(bullet):
@@ -60,25 +66,31 @@ def bulletMovment(bullet):
     bullet.x += bullet.v * math.sin(math.radians(bullet.angle))
     bullet.y += bullet.v * math.cos(math.radians(bullet.angle))
 
+def upgradeMovment(upgrade):
+    """
+    """
+    upgrade.angle += 10
+    upgrade.y += 5
+
 def bulletsDamage(bullets, targets):
     """
     """
     i = 0
     j = 0
     while i < len(bullets):
-        if bullet.isAllOut():
+        if bullets[i].isAllOut():
             bullets.remove(bullets[i])
             i -= 1
         else:
             j = 0
             while (j < len(targets)) and len(bullets):
-                if target.isAllOut():
+                if targets[j].isAllOut():
                     pass
-                elif targets[j].isColiding(bullets[i]):
+                elif targets[j].isColiding(bullets[i]) and targets[j].hp > 0:
                     targets[j].hp -= bullets[i].DAMAGE
                     bullets.remove(bullets[i])
                     i -= 1
-                    j -= 1
+                    j = len(targets)
                 j += 1
         i += 1
 
@@ -104,9 +116,32 @@ def targetsCheck(spaceship, targets, bonuses):
             spaceship.lives -= 1
             spaceship.flickeringFrames = FLICKERING_FRAMES
         if targets[i].hp <= 0:
-            bonuses += targets[i].bonuses
+            bonuses += targets[i].getBonuses()
             score += targets[i].score
             targets.remove(targets[i])
+            i -= 1
         i += 1
     return score
 
+def bonusesCheck(spaceship, bonuses):
+    """
+    """
+    i = 0
+    score = 0
+
+    while i < len(bonuses):
+        if bonuses[i].isAllOut():
+            bonuses.remove(bonuses[i])
+            i -= 1
+        elif bonuses[i].isColiding(spaceship):
+            if isinstance(bonuses[i], Upgrade):
+                spaceship.upgrade(bonuses[i].kind)
+            elif isinstance(bonuses[i], Meat):
+                score += bonuses[i].score
+            else:
+                raise Exception("Unknown bonus type!")
+            bonuses.remove(bonuses[i])
+            i -= 1
+        i += 1
+
+    return score

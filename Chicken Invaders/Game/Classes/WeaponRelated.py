@@ -16,11 +16,11 @@ class Bullet(movingObj):
                     x (int) - X coordinate of the bullet
                     y (int) - Y coordinate of the bullet
         """
-        imagePath = KIND_TO_PIC[kind]
+        imagePath = KIND_TO_SHOT_PIC[kind]
         width = int((SPACESHIP_WIDTH * damage) / 100.0)
         height = int((SPACESHIP_WIDTH * damage) / 35.0)
         angle = 0
-        super(Bullet, self).__init__(imagePath, width, height, angle, x, y, bulletMovment)
+        super(Bullet, self).__init__(imagePath, width, height, angle, x, y, [bulletMovment])
         self.v = KIND_TO_VELOCITY[kind]
         self.DAMAGE = damage
 
@@ -40,7 +40,7 @@ class Ray(object):
         """
         """
         self.damage = damage
-        self.image = load(KIND_TO_PIC[spaceship.weaponKind])
+        self.image = load(KIND_TO_SHOT_PIC[spaceship.weaponKind])
         self.width = int(SPACESHIP_WIDTH * self.damage / 100.0)
         self.heights = [SCREEN_HEIGHT]
         self.x = spaceship.x - self.width / 2
@@ -71,3 +71,19 @@ class Ray(object):
         if height == self.heights[0]:
             self.target = target
             return
+
+
+class Upgrade(movingObj):
+    """
+    """
+    def __init__(self, kind, target):
+        """
+        """
+        imagePath = KIND_TO_UPGRADE_PIC[kind]
+        width = UPGRADE_SIZE
+        height = UPGRADE_SIZE
+        angle = 0
+        x = target.x
+        y = target.y
+        super(Upgrade, self).__init__(self, imagePath, width, height, angle, x, y, [upgradeMovment])
+        self.kind = kind
