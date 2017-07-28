@@ -25,13 +25,29 @@ def gameLoop(targets, moveTargets, args):
             exit()
         if spaceship.lives is 0:
             exit()
-
         for event in pygame.event.get():
             if event.type == QUIT:
                 exit()
             elif event.type == KEYDOWN:
                 if event.key == K_f:
                     bullets += spaceship.shoot()
+
+                elif event.key == K_LEFTBRACKET:
+                    spaceship.weaponKind = (spaceship.weaponKind % AMOUNT_OF_RAYS) + 1
+
+                elif event.key == K_RIGHTBRACKET:
+                    if spaceship.weaponKind == 1:
+                        spaceship.weaponKind = 3
+
+                    else:
+                        spaceship.weaponKind -= 1
+
+                elif event.key == K_9:
+                    spaceship.weaponLevel = (spaceship.weaponLevel + 1) % 8
+
+                elif event.key == K_0:
+                    spaceship.weaponLevel = (spaceship.weaponLevel - 1) % 8
+
             elif event.type == MOUSEBUTTONUP:
                 spaceship.flickeringFrames = FLICKERING_FRAMES
 
